@@ -74,7 +74,57 @@ python script.py                    # nekonečná slučka, kontrola každých 15
 Prvý ostrý beh sa **automaticky nasejduje** — zapamätá si všetko, čo je na Bazoši teraz,
 a nepošle ti 60 správ naraz. Notifikácie prídu až na inzeráty pridané **potom**.
 
-## 5. Spustenie na pozadí
+## 5. Prevádzka na GitHub Actions (aktuálny režim)
+
+Monitor beží na **GitHub Actions**, nie na lokálnom počítači:
+https://github.com/martinkos11/bazos-auto-monitor
+
+Workflow [`.github/workflows/monitor.yml`](.github/workflows/monitor.yml) sa spúšťa
+každých 15 minút, urobí jeden prechod (`python script.py --once`) a **commitne
+`seen.sqlite3` späť do repa** — to je jediná pamäť medzi behmi, runner je zakaždým
+čistý stroj.
+
+### Secrets
+
+Repo je verejné, takže v `config.json` nesmie byť nič osobné. Všetky citlivé hodnoty
+sú `"env:NAZOV"` a reálne hodnoty sú v **Settings → Secrets and variables → Actions**:
+
+| Secret | Použitie |
+|---|---|
+| `BAZOS_PHONE` | Číslo pre WhatsApp notifikácie. |
+| `BAZOS_CALLMEBOT_KEY` | CallMeBot apikey. |
+| `BAZOS_EMAIL_USER` | *(voliteľné)* Gmail adresa, ak zapneš email kanál. |
+| `BAZOS_EMAIL_PASSWORD` | *(voliteľné)* Gmail App password. |
+
+```powershell
+gh secret set BAZOS_PHONE --body "+421903123456"
+```
+
+### Ovládanie
+
+```powershell
+gh workflow run monitor.yml        # spustiť hneď, nečakať na cron
+gh run list --workflow monitor.yml # posledné behy
+gh run view --log                  # log konkrétneho behu
+gh workflow disable monitor.yml    # dočasne vypnúť
+```
+
+Zmena preferencií = upraviť `config.json`, `git commit` a `git push`. Ďalší beh
+už pobeží podľa nového nastavenia.
+
+### Na čo si dať pozor
+
+- **Cron nie je presný.** Pri záťaži GitHubu behy meškajú 5–20 minút a občas sa preskočia.
+- **Naplánované workflowy sa vypnú po 60 dňoch nečinnosti repa.** Automatické commity
+  databázy to väčšinou udržia živé, ale ak by notifikácie prestali chodiť, pozri sa
+  do záložky Actions, či nie je workflow deaktivovaný.
+- **Nespúšťať monitor lokálne aj na GitHube naraz** — každý inzerát by prišiel dvakrát
+  a obe kópie `seen.sqlite3` by sa rozišli.
+- **Bazoš GitHub runnery neblokuje** — overené, načíta plných 60 inzerátov na prechod.
+
+---
+
+## 6. Spustenie na pozadí lokálne (záložná možnosť)
 
 Aby monitor bežal aj po reštarte a bez otvoreného okna, je v **Startup priečinku**
 zástupca `Bazos Monitor.lnk`, ktorý pri prihlásení spustí `pythonw script.py`.
