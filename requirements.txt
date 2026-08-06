@@ -1,0 +1,7 @@
+requests>=2.31
+beautifulsoup4>=4.12
+lxml>=5.0
+
+# Na tomto pocitaci Python nevedel overit HTTPS certifikaty (firemny/AV TLS proxy).
+# Tento balik prinuti requests pouzivat certifikaty z Windows uloziska.
+pip-system-certs>=4.0 ; sys_platform == "win32"

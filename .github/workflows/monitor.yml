@@ -1,0 +1,62 @@
+name: Bazos monitor
+
+on:
+  schedule:
+    # Kazdych 15 minut. GitHub cron nie je presny — pri zatazi meska aj 5-20 minut
+    # a obcas beh preskoci. Na sledovanie inzeratov to postacuje.
+    - cron: "*/15 * * * *"
+  workflow_dispatch:        # umozni rucne spustenie z zalozky Actions
+
+# Zabrani subeznym behom — dva naraz by si navzajom prepisali seen.sqlite3.
+concurrency:
+  group: bazos-monitor
+  cancel-in-progress: false
+
+permissions:
+  contents: write           # potrebne na commit databazy spat do repa
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalacia zavislosti
+        run: pip install -r requirements.txt
+
+      - name: Kontrola novych inzeratov
+        env:
+          BAZOS_PHONE: ${{ secrets.BAZOS_PHONE }}
+          BAZOS_CALLMEBOT_KEY: ${{ secrets.BAZOS_CALLMEBOT_KEY }}
+          BAZOS_EMAIL_USER: ${{ secrets.BAZOS_EMAIL_USER }}
+          BAZOS_EMAIL_PASSWORD: ${{ secrets.BAZOS_EMAIL_PASSWORD }}
+        run: python script.py --once
+
+      - name: Ulozenie databazy videnych inzeratov
+        run: |
+          if git diff --quiet -- seen.sqlite3; then
+            echo "Ziadne nove inzeraty — databaza sa nezmenila, necommitujem."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add seen.sqlite3
+          git commit -m "seen.sqlite3: aktualizacia $(date -u '+%Y-%m-%d %H:%M UTC')"
+          # Medzi behom a pushom mohol pribudnut iny commit — skusime rebase a znova.
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          done
+          echo "::error::Nepodarilo sa ulozit seen.sqlite3 — dalsi beh moze poslat duplicitne notifikacie."
+          exit 1
+
+      - name: Log z behu
+        if: always()
+        run: cat monitor.log || echo "monitor.log neexistuje"

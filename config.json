@@ -1,0 +1,51 @@
+{
+  "interval_minutes": 15,
+
+  "notifications": {
+    "email": {
+      "enabled": false,
+      "smtp_host": "smtp.gmail.com",
+      "smtp_port": 465,
+      "username": "env:BAZOS_EMAIL_USER",
+      "password": "env:BAZOS_EMAIL_PASSWORD",
+      "from": "env:BAZOS_EMAIL_USER",
+      "to": ["env:BAZOS_EMAIL_USER"]
+    },
+
+    "whatsapp": {
+      "enabled": true,
+      "provider": "callmebot",
+
+      "callmebot": {
+        "phone": "env:BAZOS_PHONE",
+        "apikey": "env:BAZOS_CALLMEBOT_KEY"
+      },
+
+      "twilio": {
+        "account_sid": "env:TWILIO_ACCOUNT_SID",
+        "auth_token": "env:TWILIO_AUTH_TOKEN",
+        "from_number": "+14155238886",
+        "to_number": "env:BAZOS_PHONE"
+      }
+    }
+  },
+
+  "preferences": [
+    {
+      "name": "VW Passat do 7000 EUR",
+      "enabled": true,
+      "query": "passat",
+      "category": "volkswagen",
+      "price_max": 7000,
+      "price_min": 2800,
+      "max_pages": 3,
+      "must_contain": ["passat"],
+      "must_not_contain": [
+        "disky", "kolesa", "pneumatiky", "nahradne diely", "rozpredam",
+        "rozpredaj", "diely", "vymenim", "kupim", "havarovane", "nepojazdne"
+      ],
+      "allow_missing_price": false,
+      "skip_top_ads": false
+    }
+  ]
+}

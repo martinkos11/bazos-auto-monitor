@@ -1,0 +1,10 @@
+# Log je pri kazdom behu iny a v repe by len rozbijal commity.
+monitor.log
+
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# POZOR: seen.sqlite3 sa ZAMERNE verzuje. Je to pamat monitora —
+# bez neho by kazdy beh na GitHub Actions poslal vsetky inzeraty odznova.
