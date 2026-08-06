@@ -186,7 +186,8 @@ takže log je jediný spôsob, ako vidieť, čo sa deje.
 | `category` | Podsekcia — `volkswagen`, `audi`, `bmw`, `skoda`, `ford`… Prázdne = celá Auto sekcia (vtedy sa medzi výsledky miešajú aj diely a disky). |
 | `price_min` / `price_max` | Cenový rozsah v EUR. Posiela sa aj Bazošu, aj sa kontroluje lokálne. |
 | `max_pages` | Koľko strán výsledkov prejsť (20 inzerátov na stranu). |
-| `must_contain` | Všetky tieto slová musia byť v inzeráte. Diakritika sa ignoruje. |
+| `must_contain` | Všetky tieto slová musia byť v inzeráte (AND). Diakritika sa ignoruje. |
+| `must_contain_any` | Stačí **jedno** zo slov (OR). Pri porovnaní sa ignorujú medzery, takže `"110kw"` sadne aj na `110 kW` — predajcovia výkon píšu oboma spôsobmi. |
 | `must_not_contain` | Ak je ktorékoľvek slovo v **nadpise**, inzerát sa preskočí. |
 | `must_not_contain_scope` | `title` (predvolené) alebo `full`. `full` prehľadáva aj popis — pozor, zahodí aj skutočné autá, ktoré majú vo výbave napr. „hliníkové disky". |
 | `must_contain_scope` | `full` (predvolené) alebo `title` — prísnejšie, slovo musí byť priamo v nadpise. |

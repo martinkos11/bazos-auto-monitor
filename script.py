@@ -196,6 +196,14 @@ def matches(ad, pref):
         if strip_diacritics(word) not in include_haystack:
             return False, f"chyba klucove slovo '{word}'"
 
+    # must_contain_any = OR (staci jedno slovo). Porovnava sa bez medzier, aby
+    # '110kw' sadlo aj na '110 kW' — predajcovia vykon pisu oboma sposobmi.
+    alternatives = pref.get("must_contain_any", [])
+    if alternatives:
+        compact = re.sub(r"\s+", "", include_haystack)
+        if not any(re.sub(r"\s+", "", strip_diacritics(w)) in compact for w in alternatives):
+            return False, f"chyba aspon jedno z {alternatives}"
+
     # Vylucene slova hladame len v nadpise. Inak by sme zahodili aj skutocne auta,
     # ktore maju v popise vybavy napr. "hlinikove disky" alebo "zimne pneumatiky".
     scope = pref.get("must_not_contain_scope", "title")

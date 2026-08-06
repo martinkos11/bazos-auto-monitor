@@ -46,6 +46,58 @@
       ],
       "allow_missing_price": false,
       "skip_top_ads": false
+    },
+
+    {
+      "name": "VW Passat 110kW do 10000 EUR",
+      "enabled": true,
+      "query": "passat",
+      "category": "volkswagen",
+      "price_max": 10000,
+      "price_min": 7000,
+      "max_pages": 3,
+      "must_contain": ["passat"],
+      "must_contain_any": ["110kw"],
+      "must_not_contain": [
+        "disky", "kolesa", "pneumatiky", "nahradne diely", "rozpredam",
+        "rozpredaj", "diely", "vymenim", "kupim", "havarovane", "nepojazdne"
+      ],
+      "allow_missing_price": false,
+      "skip_top_ads": false
+    },
+
+    {
+      "name": "VW Touareg 7000-10000 EUR",
+      "enabled": true,
+      "query": "touareg",
+      "category": "volkswagen",
+      "price_max": 10000,
+      "price_min": 7000,
+      "max_pages": 3,
+      "must_contain": ["touareg"],
+      "must_not_contain": [
+        "disky", "kolesa", "pneumatiky", "nahradne diely", "rozpredam",
+        "rozpredaj", "diely", "vymenim", "kupim", "havarovane", "nepojazdne"
+      ],
+      "allow_missing_price": false,
+      "skip_top_ads": false
+    },
+
+    {
+      "name": "Skoda Superb 6000-10000 EUR",
+      "enabled": true,
+      "query": "superb",
+      "category": "skoda",
+      "price_max": 10000,
+      "price_min": 6000,
+      "max_pages": 3,
+      "must_contain": ["superb"],
+      "must_not_contain": [
+        "disky", "kolesa", "pneumatiky", "nahradne diely", "rozpredam",
+        "rozpredaj", "diely", "vymenim", "kupim", "havarovane", "nepojazdne"
+      ],
+      "allow_missing_price": false,
+      "skip_top_ads": false
     }
   ]
 }
